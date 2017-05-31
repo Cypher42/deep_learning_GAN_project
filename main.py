@@ -106,11 +106,6 @@ if not os.path.exists('out/'):
 i = 0
 
 for it in range(100000):
-    if it % 100 == 0:
-        samples = sess.run(G_sample, feed_dict={Z: sample_Z(16, Z_dim)})
-
-        i += 1
-
     X_mb = preprocess_data(128).__next__()
 
     _, D_loss_curr = sess.run([D_solver, D_loss], feed_dict={X: X_mb, Z: sample_Z(mb_size, Z_dim)})
@@ -121,3 +116,9 @@ for it in range(100000):
         print('D loss: {:.4}'. format(D_loss_curr))
         print('G_loss: {:.4}'.format(G_loss_curr))
         print()
+
+samples = sess.run(G_sample, feed_dict={Z: sample_Z(16, Z_dim)})
+with open('results.csv','w+',newline='') as fp:
+    wrtr = csv.writer(fp,delimiter=',' )
+    for line in samples:
+        wrtr.writerow(line)
