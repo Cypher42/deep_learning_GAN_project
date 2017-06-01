@@ -19,9 +19,10 @@ def pp_race(data_vec):
     if data_vec[-3] in race_dict:
         data_vec[-3] = race_dict[data_vec[-3]]
     else:
+        race_iter += 1
         race_dict[data_vec[-3]] = float(rarity_iter) / 7.0
         data_vec[-3] = float(race_dict[data_vec[-3]])
-        race_iter += 1
+
     return
 
 def pp_rarity(data_vec):
@@ -137,20 +138,20 @@ def read_data():
             data_vec = extract_play_requirements(data_vec)
             for i in range(len(data_vec)):
                 if data_vec[i] == '':
-                    data_vec[i] = -1
-            if data_vec[1] != -1:
+                    data_vec[i] = 1.0
+            if data_vec[1] != 1:
                 pp_classes(data_vec)
-            if data_vec[2] != -1:
+            if data_vec[2] != 1:
                 pp_type(data_vec)
-            if data_vec[3] != -1:
+            if data_vec[3] != 1:
                 data_vec[3] = float(data_vec[3])/10.0
-            if data_vec[4] != -1:
+            if data_vec[4] != 1:
                 data_vec[4] = float(data_vec[4])/30.0
-            if data_vec[5] != -1:
+            if data_vec[5] != 1:
                 data_vec[5] = float(data_vec[5])/200.0
-            if data_vec[6] != -1:
+            if data_vec[6] != 1:
                 pp_rarity(data_vec)
-            if data_vec[-3] != -1:
+            if data_vec[-3] != 1:
                 pp_race(data_vec)
                 #print(data_vec[-3])
 

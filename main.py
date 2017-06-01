@@ -107,8 +107,8 @@ i = 0
 
 for it in range(100000):
     X_mb = preprocess_data(128).__next__()
-
-    _, D_loss_curr = sess.run([D_solver, D_loss], feed_dict={X: X_mb, Z: sample_Z(mb_size, Z_dim)})
+    if it%100 ==0:
+        _, D_loss_curr = sess.run([D_solver, D_loss], feed_dict={X: X_mb, Z: sample_Z(mb_size, Z_dim)})
     _, G_loss_curr = sess.run([G_solver, G_loss], feed_dict={Z: sample_Z(mb_size, Z_dim)})
 
     if it % 1000 == 0:
