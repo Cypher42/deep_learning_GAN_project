@@ -5,6 +5,8 @@ import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 import os
 import csv
+from matplotlib import pyplot as plt
+import progressbar
 
 
 def preprocess_data(mbatch_size = 128):
@@ -40,21 +42,27 @@ X = tf.placeholder(tf.float32, shape=[None, 22])
 D_W1 = tf.Variable(xavier_init([22, 11]))
 D_b1 = tf.Variable(tf.zeros(shape=[11]))
 
-D_W2 = tf.Variable(xavier_init([11, 1]))
-D_b2 = tf.Variable(tf.zeros(shape=[1]))
+D_W2 = tf.Variable(xavier_init([11, 6]))
+D_b2 = tf.Variable(tf.zeros(shape=[6]))
 
-theta_D = [D_W1, D_W2, D_b1, D_b2]
+D_W3 = tf.Variable(xavier_init([6, 1]))
+D_b3 = tf.Variable(tf.zeros(shape=[1]))
+
+theta_D = [D_W1, D_W2,D_W3,D_b1, D_b2,D_b3]
 
 
-Z = tf.placeholder(tf.float32, shape=[None, 5])
+Z = tf.placeholder(tf.float32, shape=[None, 3])
 
-G_W1 = tf.Variable(xavier_init([5, 11]))
+G_W0 = tf.Variable(xavier_init([3, 6]))
+G_b0 = tf.Variable(tf.zeros(shape=[6]))
+
+G_W1 = tf.Variable(xavier_init([6, 11]))
 G_b1 = tf.Variable(tf.zeros(shape=[11]))
 
 G_W2 = tf.Variable(xavier_init([11, 22]))
 G_b2 = tf.Variable(tf.zeros(shape=[22]))
 
-theta_G = [G_W1, G_W2, G_b1, G_b2]
+theta_G = [G_W0,G_W1, G_W2, G_b0,G_b1, G_b2]
 
 
 def sample_Z(m, n):
@@ -62,7 +70,8 @@ def sample_Z(m, n):
 
 
 def generator(z):
-    G_h1 = tf.nn.relu(tf.matmul(z, G_W1) + G_b1)
+    G_h0 = tf.nn.relu(tf.matmul(z,G_W0)+ G_b0)
+    G_h1 = tf.nn.relu(tf.matmul(G_h0, G_W1) + G_b1)
     G_log_prob = tf.matmul(G_h1, G_W2) + G_b2
     G_prob = tf.nn.sigmoid(G_log_prob)
 
@@ -72,7 +81,8 @@ def generator(z):
 def discriminator(x):
     D_h1 = tf.nn.relu(tf.matmul(x, D_W1) + D_b1)
     D_logit = tf.matmul(D_h1, D_W2) + D_b2
-    D_prob = tf.nn.sigmoid(D_logit)
+    D_logit2 = tf.matmul(D_logit, D_W3)+ D_b3
+    D_prob = tf.nn.sigmoid(D_logit2)
 
     return D_prob, D_logit
 
@@ -95,7 +105,7 @@ D_solver = tf.train.AdamOptimizer().minimize(D_loss, var_list=theta_D)
 G_solver = tf.train.AdamOptimizer().minimize(G_loss, var_list=theta_G)
 
 mb_size = 128
-Z_dim = 5
+Z_dim = 3
 
 sess = tf.Session()
 sess.run(tf.global_variables_initializer())
@@ -105,20 +115,32 @@ if not os.path.exists('out/'):
 
 i = 0
 
-for it in range(100000):
+d_l = list()
+g_l = list()
+
+bar = progressbar.ProgressBar()
+
+for it in bar(range(1000000)):
     X_mb = preprocess_data(128).__next__()
     if it%100 ==0:
         _, D_loss_curr = sess.run([D_solver, D_loss], feed_dict={X: X_mb, Z: sample_Z(mb_size, Z_dim)})
     _, G_loss_curr = sess.run([G_solver, G_loss], feed_dict={Z: sample_Z(mb_size, Z_dim)})
 
-    if it % 1000 == 0:
+    if it % 10000 == 0:
         print('Iter: {}'.format(it))
         print('D loss: {:.4}'. format(D_loss_curr))
         print('G_loss: {:.4}'.format(G_loss_curr))
         print()
+    d_l.append(D_loss_curr)
+    g_l.append(G_loss_curr)
 
 samples = sess.run(G_sample, feed_dict={Z: sample_Z(16, Z_dim)})
 with open('results.csv','w+',newline='') as fp:
     wrtr = csv.writer(fp,delimiter=',' )
     for line in samples:
         wrtr.writerow(line)
+
+l1 = plt.plot(d_l,label='Discriminator')
+l2 = plt.plot(g_l,label='Generator')
+plt.legend()
+plt.show()

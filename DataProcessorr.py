@@ -13,6 +13,10 @@ global rarity_iter
 global race_iter
 global race_dict
 
+def redo_race(data_vec):
+    global race_iter
+    global race_dict
+
 def pp_race(data_vec):
     global race_iter
     global race_dict
@@ -124,7 +128,10 @@ def read_data():
         c = 0
         effects = dict()
         first = True
+
         for line in rdr:
+            skip = False
+            #print("hi")
             if first:
                 first = False
                 continue
@@ -133,7 +140,8 @@ def read_data():
             data_vec += [line[12]]
             data_vec += line[14:16]
             data_vec += line[-2:]
-            c += 1
+
+            print(c)
             data_vec = extract_mechanics(data_vec)
             data_vec = extract_play_requirements(data_vec)
             for i in range(len(data_vec)):
@@ -142,6 +150,8 @@ def read_data():
             if data_vec[1] != 1:
                 pp_classes(data_vec)
             if data_vec[2] != 1:
+                if data_vec[2] != 'MINION':
+                    skip = True
                 pp_type(data_vec)
             if data_vec[3] != 1:
                 data_vec[3] = float(data_vec[3])/10.0
@@ -150,6 +160,8 @@ def read_data():
             if data_vec[5] != 1:
                 data_vec[5] = float(data_vec[5])/200.0
             if data_vec[6] != 1:
+                if data_vec[6] == 'LEGENDARY':
+                    skip = True
                 pp_rarity(data_vec)
             if data_vec[-3] != 1:
                 pp_race(data_vec)
@@ -160,8 +172,9 @@ def read_data():
                     max = int(data_vec[5])
                 if int(data_vec[5]) < min:
                     min = int(data_vec[5])
-
-            wrtr.writerow(data_vec)
+            if not skip:
+                c += 1
+                wrtr.writerow(data_vec)
            # print(len(data_vec))
             data_vec = list()
    #print(min,max)
