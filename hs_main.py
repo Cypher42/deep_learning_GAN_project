@@ -7,7 +7,7 @@ import os
 import csv
 from matplotlib import pyplot as plt
 import progressbar
-
+from DataProcessorr import decode
 
 def preprocess_data(mbatch_size = 128):
     result = list()
@@ -37,30 +37,30 @@ def xavier_init(size):
     return tf.random_normal(shape=size, stddev=xavier_stddev)
 
 
-X = tf.placeholder(tf.float32, shape=[None, 22])
+X = tf.placeholder(tf.float32, shape=[None, 134])
 
-D_W1 = tf.Variable(xavier_init([22, 11]))
-D_b1 = tf.Variable(tf.zeros(shape=[11]))
+D_W1 = tf.Variable(xavier_init([134, 66]))
+D_b1 = tf.Variable(tf.zeros(shape=[66]))
 
-D_W2 = tf.Variable(xavier_init([11, 6]))
-D_b2 = tf.Variable(tf.zeros(shape=[6]))
+D_W2 = tf.Variable(xavier_init([66, 33]))
+D_b2 = tf.Variable(tf.zeros(shape=[33]))
 
-D_W3 = tf.Variable(xavier_init([6, 1]))
+D_W3 = tf.Variable(xavier_init([33, 1]))
 D_b3 = tf.Variable(tf.zeros(shape=[1]))
 
 theta_D = [D_W1, D_W2,D_W3,D_b1, D_b2,D_b3]
 
 
-Z = tf.placeholder(tf.float32, shape=[None, 3])
+Z = tf.placeholder(tf.float32, shape=[None, 11])
 
-G_W0 = tf.Variable(xavier_init([3, 6]))
-G_b0 = tf.Variable(tf.zeros(shape=[6]))
+G_W0 = tf.Variable(xavier_init([11, 33]))
+G_b0 = tf.Variable(tf.zeros(shape=[33]))
 
-G_W1 = tf.Variable(xavier_init([6, 11]))
-G_b1 = tf.Variable(tf.zeros(shape=[11]))
+G_W1 = tf.Variable(xavier_init([33, 66]))
+G_b1 = tf.Variable(tf.zeros(shape=[66]))
 
-G_W2 = tf.Variable(xavier_init([11, 22]))
-G_b2 = tf.Variable(tf.zeros(shape=[22]))
+G_W2 = tf.Variable(xavier_init([66, 134]))
+G_b2 = tf.Variable(tf.zeros(shape=[134]))
 
 theta_G = [G_W0,G_W1, G_W2, G_b0,G_b1, G_b2]
 
@@ -105,7 +105,7 @@ D_solver = tf.train.AdamOptimizer().minimize(D_loss, var_list=theta_D)
 G_solver = tf.train.AdamOptimizer().minimize(G_loss, var_list=theta_G)
 
 mb_size = 128
-Z_dim = 3
+Z_dim = 11
 
 sess = tf.Session()
 sess.run(tf.global_variables_initializer())
@@ -120,9 +120,9 @@ g_l = list()
 
 bar = progressbar.ProgressBar()
 
-for it in bar(range(1000000)):
+for it in bar(range(100000)):
     X_mb = preprocess_data(128).__next__()
-    if it%100 ==0:
+    if it%10 ==0:
         _, D_loss_curr = sess.run([D_solver, D_loss], feed_dict={X: X_mb, Z: sample_Z(mb_size, Z_dim)})
     _, G_loss_curr = sess.run([G_solver, G_loss], feed_dict={Z: sample_Z(mb_size, Z_dim)})
 
@@ -133,6 +133,8 @@ for it in bar(range(1000000)):
         print()
     d_l.append(D_loss_curr)
     g_l.append(G_loss_curr)
+
+decode()
 
 samples = sess.run(G_sample, feed_dict={Z: sample_Z(16, Z_dim)})
 with open('results.csv','w+',newline='') as fp:

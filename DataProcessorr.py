@@ -290,7 +290,7 @@ def read_data_one_hot():
             solution += data_vec[9:-3]
             arr = np.zeros(race_iter)
             if data_vec[-3] != 1:
-                arr[race_dict[data_vec[-3]]] = 1.0
+                arr[int(race_dict[data_vec[-3]])] = 1.0
                 data_vec[2] = arr
             solution += arr.tolist()
             solution += data_vec[-2:]
@@ -333,6 +333,105 @@ def preprocess_data(mbatch_size = 128):
 
     return result
 
+def decode_one_hot(one_hot_vec,decoder_dict):
+    class_l = list()
+    for i in range(len(one_hot_vec)):
+        if float(float(one_hot_vec[i])) > 0.5:
+            for key in decoder_dict:
+                if decoder_dict[key] == i:
+                    class_l.append(key)
+    return class_l
+
+def decode_one_hot_pq(pq_vec,pq_val_vec,decoder_dict):
+    class_l = dict()
+    for i in range(len(pq_vec)):
+        if float(float(pq_vec[i])) > 0.5:
+            for key in decoder_dict:
+                if decoder_dict[key] == i:
+                    class_l[key] = pq_val_vec[i]
+    return class_l
+
+def decode_line(line,c):
+    with open('dicts.pkl', 'rb') as fp:
+        class_dict = pickle.load(fp)
+        class_iter = pickle.load(fp)
+        key_dict = pickle.load(fp)
+        key_iter = pickle.load(fp)
+        pq_dict = pickle.load(fp)
+        pq_iter = pickle.load(fp)
+        race_dict = pickle.load(fp)
+        race_iter = pickle.load(fp)
+        rarity_dict = pickle.load(fp)
+        rarity_iter = pickle.load(fp)
+        type_dict = pickle.load(fp)
+        type_iter = pickle.load(fp)
+    header = ['id'] + (class_iter*['class']) + (type_iter*['type']) + ['cost', 'attack', 'health'] + (rarity_iter*['rarity'])\
+            + (key_iter*['mechanic']) + (pq_iter*['play_req'])+ (pq_iter*['play_req_val'])+(race_iter*['race']+['durability','entourage'])
+    name = ['gen_card_'+str(c)]
+    #decoding class
+    class_vec = line[:class_iter]
+    class_l = decode_one_hot(class_vec,class_dict)
+
+    line = line[class_iter:]
+
+    type_vec = line[:type_iter]
+    type_l = decode_one_hot(type_vec,type_dict)
+
+    line = line[type_iter:]
+
+    cost = int(float(line[0]) * 10.0)
+    attack = int(float(line[1]) * 30.0)
+    health = int(float(line[2]) * 200.0)
+
+    line = line[3:]
+
+    rarity_vec = line[:rarity_iter]
+    rarity_l = decode_one_hot(rarity_vec,rarity_dict)
+
+    line = line[rarity_iter:]
+
+    mecha_vec = line[:key_iter]
+    mecha_l = decode_one_hot(mecha_vec,key_dict)
+
+    line = line[key_iter:]
+
+    pq_vec = line[:pq_iter]
+    line = line[pq_iter:]
+
+    pq_val_vec = line[:pq_iter]
+    line = line[pq_iter:]
+
+    pq = decode_one_hot_pq(pq_vec,pq_val_vec,pq_dict)
+
+    race_vec = line[:race_iter]
+    race_l = decode_one_hot(race_vec,race_dict)
+
+    line = line[race_iter:]
+
+    dura_l = line[0]
+
+
+    return [name,class_l,type_l,cost,attack,health,rarity_l,mecha_l,pq,race_l,dura_l]
+
+def decode():
+    reader = csv.reader(open('results.csv', 'r'), delimiter=',', lineterminator='\n')
+
+    with open('result_clean.csv','w+') as fp:
+        wr = csv.writer(fp, delimiter=',', lineterminator='\n')
+        c = 0
+        first = True
+        for line in reader:
+            if first:
+                first = False
+                continue
+            line = decode_line(line,c)
+            c += 1
+            print(line)
+            wr.writerow(line)
+
+
+    pass
+
 type_dict = dict()
 type_iter = 0
 key_iter = 0
@@ -346,8 +445,8 @@ pq_dict = dict()
 rarity_dict = dict()
 race_dict = dict()
 #read_data()
-read_data_one_hot()
+#read_data_one_hot()
 #preprocess_data()
-
+decode()
 
 
