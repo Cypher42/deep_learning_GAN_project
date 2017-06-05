@@ -11,6 +11,10 @@ import progressbar
 mb_size = 128
 Z_dim = 5
 
+global train
+
+train = False
+
 def preprocess_data(mbatch_size = 128):
     result = list()
     while(True):
@@ -67,12 +71,16 @@ def sample_Z(m, n):
 
 def generator(z):
     layer = tf.layers.dense(z, 11, activation = tf.nn.relu)
+    layer = tf.layers.dropout(layer,rate=0.4,training=train)
     layer = tf.layers.batch_normalization(layer)
     layer = tf.layers.dense(layer, 33, activation = tf.nn.relu)
+    layer = tf.layers.dropout(layer,rate=0.4,training=train)
     layer = tf.layers.batch_normalization(layer)
     layer = tf.layers.dense(layer, 66, activation = tf.nn.relu)
+    layer = tf.layers.dropout(layer,rate=0.4,training=train)
     layer = tf.layers.batch_normalization(layer)
     layer = tf.layers.dense(layer, 132, activation = tf.nn.relu)
+    layer = tf.layers.dropout(layer,rate=0.4,training=train)
     layer = tf.layers.batch_normalization(layer)
     G_prob = tf.layers.dense(layer, 134, activation = tf.nn.sigmoid)
     #G_h1 = tf.nn.relu(tf.matmul(z, G_W1) + G_b1)
@@ -85,8 +93,14 @@ def generator(z):
 def discriminator(x):
     x = tf.layers.batch_normalization(x)
     layer = tf.layers.dense(x, 134, activation = tf.nn.relu)
+    layer = tf.layers.dropout(layer,rate=0.4,training=train)
+    layer = tf.layers.batch_normalization(layer)
     layer = tf.layers.dense(layer, 67, activation = tf.nn.relu)
+    layer = tf.layers.dropout(layer,rate=0.4,training=train)
+    layer = tf.layers.batch_normalization(layer)
     layer = tf.layers.dense(layer, 33, activation = tf.nn.relu)
+    layer = tf.layers.dropout(layer,rate=0.4,training=train)
+    layer = tf.layers.batch_normalization(layer)
     #layer = tf.layers.dense(layer, 16, activation = tf.nn.relu)
     D_logit = tf.layers.dense(layer, 1, activation = None)
 
@@ -128,6 +142,7 @@ g_l = list()
 D_loss_curr = 0.0
 bar = progressbar.ProgressBar()
 for it in bar(range(1000)):
+    train = True
     X_mb = preprocess_data(256).__next__()
     #if it%5==0: improves the discriminator a lot
     #z = sample_Z(mb_size, Z_dim) # using same z for both doesn't change anything
@@ -149,6 +164,8 @@ print('G_loss: {:.4}'.format(G_loss_curr))
 print()
 
 decode()
+
+train = False
 
 samples = sess.run(G_sample, feed_dict={Z: sample_Z(16, Z_dim)})
 with open('results.csv','w+',newline='') as fp:
