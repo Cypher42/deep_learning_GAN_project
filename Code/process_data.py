@@ -67,7 +67,7 @@ def main():
 
     # set train frame dimensions
     assert os.path.exists(c.TRAIN_DIR)
-    c.FULL_HEIGHT, c.FULL_WIDTH = c.get_train_frame_dims()
+    #c.FULL_HEIGHT, c.FULL_WIDTH = c.get_train_frame_dims()
 
     ##
     # Process data for training
