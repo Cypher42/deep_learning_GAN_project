@@ -434,11 +434,11 @@ def decode_line_light(line):
     line = line[pq_iter:]
 
     race_vec = line[:race_iter]
-    race_l = binarize_one_hot(race_vec,race_dict)
+    race_l = binarize_one_hot(race_vec)
 
     line = line[race_iter:]
 
-    dura_l = np.array([np.round(line[0])])
+    dura_l = np.array([np.round(line[-1])])
 
     solution = np.hstack((class_l,type_l,cah,rarity_l,mecha_l,pq_vec_l,pq_val_vec_l,race_l,dura_l))
     return solution

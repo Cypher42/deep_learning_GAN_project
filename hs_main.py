@@ -29,6 +29,28 @@ def preprocess_data(mbatch_size = 128):
                 for i in range(len(line)):
                     line[i] = float(line[i])
                 result.append(line)
+
+
+def preprocess_data_shuffle(mbatch_size=128):
+    with open('gan_card.csv','r') as fp:
+        rdr = csv.reader(fp,delimiter=',')
+        c = 0
+        data = list()
+        first = True
+        for line in rdr:
+            if first:
+                first = False
+                continue
+                line = (line[1:-1])
+                for i in range(len(line)):
+                    line[i] = float(line[i])
+                data.append(line)
+        import random
+        while(True):
+            yield random.choice(data,mbatch_size)
+
+
+
    # return np.array(result)
 
 def xavier_init(size):

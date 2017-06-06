@@ -39,7 +39,25 @@ def preprocess_data(mbatch_size = 128):
                 for i in range(len(line)):
                     line[i] = float(line[i])
                 result.append(line)
-   # return np.array(result)
+
+
+def preprocess_data_shuffle(mbatch_size=128):
+    with open('gan_card.csv','r') as fp:
+        rdr = csv.reader(fp,delimiter=',')
+        c = 0
+        data = list()
+        first = True
+        for line in rdr:
+            if first:
+                first = False
+                continue
+            line = (line[1:-1])
+            for i in range(len(line)):
+                line[i] = float(line[i])
+            data.append(line)
+        import random
+        while(True):
+            yield random.sample(data,mbatch_size)
 
 def xavier_init(size):
     in_dim = size[0]
@@ -151,7 +169,7 @@ D_loss_curr = 0.0
 bar = progressbar.ProgressBar()
 for it in bar(range(1000)):
     train = True
-    X_mb = preprocess_data(256).__next__()
+    X_mb = preprocess_data_shuffle(256).__next__()
     #if it%5==0: improves the discriminator a lot
     #z = sample_Z(mb_size, Z_dim) # using same z for both doesn't change anything
     #if it%10:
