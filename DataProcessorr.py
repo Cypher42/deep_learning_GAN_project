@@ -334,6 +334,14 @@ def preprocess_data(mbatch_size = 128):
     return result
 
 def decode_one_hot(one_hot_vec,decoder_dict):
+    one_hot_vec = np.array(one_hot_vec)
+    max = one_hot_vec.argmax()
+    for key in decoder_dict:
+        if decoder_dict[key] == max:
+            return [key]
+    """"""
+
+def decode_one_hot_mechanic(one_hot_vec, decoder_dict):
     class_l = list()
     for i in range(len(one_hot_vec)):
         if float(float(one_hot_vec[i])) > 0.5:
@@ -343,15 +351,107 @@ def decode_one_hot(one_hot_vec,decoder_dict):
     return class_l
 
 def decode_one_hot_pq(pq_vec,pq_val_vec,decoder_dict):
+    """"""
     class_l = dict()
     for i in range(len(pq_vec)):
         if float(float(pq_vec[i])) > 0.5:
             for key in decoder_dict:
                 if decoder_dict[key] == i:
-                    class_l[key] = pq_val_vec[i]
+                    class_l[key] = np.round(float(pq_val_vec[i]))
     return class_l
 
+def binarize_one_hot(one_hot_vec):
+    one_hot_vec = np.array(one_hot_vec)
+    class_l = np.zeros(len(one_hot_vec))
+    max = one_hot_vec.argmax()
+    class_l[max] = 1.0
+    return class_l
+
+def decode_line_light(line):
+    """
+    light decoding for the training process
+    :param line:
+    :param c:
+    :return:
+    """
+    with open('dicts.pkl', 'rb') as fp:
+        class_dict = pickle.load(fp)
+        class_iter = pickle.load(fp)
+        key_dict = pickle.load(fp)
+        key_iter = pickle.load(fp)
+        pq_dict = pickle.load(fp)
+        pq_iter = pickle.load(fp)
+        race_dict = pickle.load(fp)
+        race_iter = pickle.load(fp)
+        rarity_dict = pickle.load(fp)
+        rarity_iter = pickle.load(fp)
+        type_dict = pickle.load(fp)
+        type_iter = pickle.load(fp)
+    header = ['id'] + (class_iter*['class']) + (type_iter*['type']) + ['cost', 'attack', 'health'] + (rarity_iter*['rarity'])\
+            + (key_iter*['mechanic']) + (pq_iter*['play_req'])+ (pq_iter*['play_req_val'])+(race_iter*['race']+['durability','entourage'])
+#    name = ['gen_card_'+str(c)]
+    #decoding class
+    class_vec = line[:class_iter]
+    class_l = binarize_one_hot(class_vec)
+
+    line = line[class_iter:]
+
+    type_vec = (line[:type_iter])
+    type_l = binarize_one_hot(type_vec)
+
+    line = line[type_iter:]
+
+    cost = int(float(line[0]) * 10.0)
+    attack = int(float(line[1]) * 30.0)
+    health = int(float(line[2]) * 200.0)
+
+    cah = np.array([cost,attack,health])
+
+    line = line[3:]
+
+    rarity_vec = (line[:rarity_iter])
+    rarity_l = binarize_one_hot(rarity_vec)
+
+    line = line[rarity_iter:]
+
+    mecha_vec = (line[:key_iter])
+    for i in range(len(mecha_vec)):
+        mecha_vec[i] = np.round(mecha_vec[i])
+    mecha_l = np.array(mecha_vec)
+
+    line = line[key_iter:]
+
+    pq_vec = line[:pq_iter]
+    for i in range(len(pq_vec)):
+        pq_vec = np.round(pq_vec[i])
+    pq_vec_l = np.array(pq_vec)
+    line = line[pq_iter:]
+
+    pq_val_vec = line[:pq_iter]
+    for i in range(len(pq_val_vec)):
+        pq_val_vec = np.round(pq_val_vec[i])
+    pq_val_vec_l = np.array(pq_val_vec)
+    line = line[pq_iter:]
+
+    race_vec = line[:race_iter]
+    race_l = binarize_one_hot(race_vec,race_dict)
+
+    line = line[race_iter:]
+
+    dura_l = np.array([np.round(line[0])])
+
+    solution = np.hstack((class_l,type_l,cah,rarity_l,mecha_l,pq_vec_l,pq_val_vec_l,race_l,dura_l))
+    return solution
+    #return [name,class_l,type_l,cost,attack,health,rarity_l,mecha_l,pq,race_l,dura_l]
+
+
 def decode_line(line,c):
+    """
+    Decoding line for saving
+    :param line:
+    :param c:
+    :return:
+    """
     with open('dicts.pkl', 'rb') as fp:
         class_dict = pickle.load(fp)
         class_iter = pickle.load(fp)
@@ -391,11 +491,11 @@ def decode_line(line,c):
     line = line[rarity_iter:]
 
     mecha_vec = line[:key_iter]
-    mecha_l = decode_one_hot(mecha_vec,key_dict)
+    mecha_l = decode_one_hot_mechanic(mecha_vec,key_dict)
 
     line = line[key_iter:]
 
-    pq_vec = line[:pq_iter]
+    pq_vec = np.array(line[:pq_iter])
     line = line[pq_iter:]
 
     pq_val_vec = line[:pq_iter]
@@ -414,6 +514,10 @@ def decode_line(line,c):
     return [name,class_l,type_l,cost,attack,health,rarity_l,mecha_l,pq,race_l,dura_l]
 
 def decode():
+    """
+    decode a dataset for saving
+    :return:
+    """
     reader = csv.reader(open('results.csv', 'r'), delimiter=',', lineterminator='\n')
 
     with open('result_clean.csv','w+') as fp:

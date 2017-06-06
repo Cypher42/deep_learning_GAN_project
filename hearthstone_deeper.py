@@ -8,10 +8,14 @@ import os
 import csv
 import progressbar
 
+from DataProcessorr import decode_line_light
+
 mb_size = 128
 Z_dim = 5
 
 global train
+global sess
+sess = None
 
 train = False
 
@@ -70,6 +74,7 @@ def sample_Z(m, n):
 
 
 def generator(z):
+    global sess
     layer = tf.layers.dense(z, 11, activation = tf.nn.relu)
     layer = tf.layers.dropout(layer,rate=0.4,training=train)
     layer = tf.layers.batch_normalization(layer)
@@ -86,11 +91,15 @@ def generator(z):
     #G_h1 = tf.nn.relu(tf.matmul(z, G_W1) + G_b1)
     #G_log_prob = tf.matmul(layer, G_W2) + G_b2
     #G_prob = tf.nn.sigmoid(G_log_prob)
-
+    if sess != None:
+        G_prob_arr = G_prob.eval(session=sess)
+        for i in range(len(G_prob)):
+            G_prob_arr[i] = decode_line_light(G_prob[i])
+        return tf.Constant(G_prob_arr)
     return G_prob
 
-
 def discriminator(x):
+
     x = tf.layers.batch_normalization(x)
     layer = tf.layers.dense(x, 134, activation = tf.nn.relu)
     layer = tf.layers.dropout(layer,rate=0.4,training=train)
@@ -127,7 +136,6 @@ G_loss = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(logits=D_logit_f
 
 D_solver = tf.train.AdamOptimizer().minimize(D_loss)#, var_list=theta_D)
 G_solver = tf.train.AdamOptimizer().minimize(G_loss)#, var_list=theta_G)
-
 
 sess = tf.Session()
 sess.run(tf.global_variables_initializer())
