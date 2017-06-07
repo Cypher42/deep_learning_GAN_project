@@ -223,6 +223,7 @@ def read_data_one_hot():
             if first:
                 first = False
                 continue
+
             data_vec += line[:3]
             data_vec += line[6:10]
             data_vec += [line[12]]
@@ -234,6 +235,7 @@ def read_data_one_hot():
             #data_vec = extract_mechanics(data_vec)
             #data_vec = extract_play_requirements(data_vec)
             for i in range(len(data_vec)):
+
                 if data_vec[i] == '':
                     data_vec[i] = 1.0
             solution = [data_vec[0]]
@@ -246,8 +248,6 @@ def read_data_one_hot():
             solution += arr.tolist()
             arr = np.zeros(type_iter)
             if data_vec[2] != 1:
-                if data_vec[2] != 'MINION':
-                    skip = True
                 arr[type_dict[data_vec[2]]] = 1.0
                 data_vec[2] = arr
             solution += arr.tolist()
@@ -255,14 +255,12 @@ def read_data_one_hot():
             if data_vec[3] != 1:
                 data_vec[3] = float(data_vec[3]) / 10.0
             if data_vec[4] != 1:
-                data_vec[4] = float(data_vec[4]) / 30.0
+                data_vec[4] = float(data_vec[4]) / 12.0
             if data_vec[5] != 1:
-                data_vec[5] = float(data_vec[5]) / 200.0
+                data_vec[5] = float(data_vec[5]) / 12.0
             solution += data_vec[3:6]
             arr = np.zeros(rarity_iter)
             if data_vec[6] != 1:
-                if data_vec[6] == 'LEGENDARY':
-                    skip = True
                 #pp_rarity(data_vec)
 
                 arr[rarity_dict[data_vec[6]]-1] = 1.0
@@ -357,6 +355,8 @@ def decode_one_hot_pq(pq_vec,pq_val_vec,decoder_dict):
         if float(float(pq_vec[i])) > 0.5:
             for key in decoder_dict:
                 if decoder_dict[key] == i:
+                    if np.round(float(pq_val_vec[i])) == 0:
+                        continue
                     class_l[key] = np.round(float(pq_val_vec[i]))
     return class_l
 
@@ -402,8 +402,8 @@ def decode_line_light(line):
     line = line[type_iter:]
 
     cost = int(float(line[0]) * 10.0)
-    attack = int(float(line[1]) * 30.0)
-    health = int(float(line[2]) * 200.0)
+    attack = int(float(line[1]) * 12.0)
+    health = int(float(line[2]) * 12.0)
 
     cah = np.array([cost,attack,health])
 
@@ -480,8 +480,8 @@ def decode_line(line,c):
     line = line[type_iter:]
 
     cost = int(float(line[0]) * 10.0)
-    attack = int(float(line[1]) * 30.0)
-    health = int(float(line[2]) * 200.0)
+    attack = int(float(line[1]) * 12.0)
+    health = int(float(line[2]) * 12.0)
 
     line = line[3:]
 
@@ -530,7 +530,7 @@ def decode():
                 continue
             line = decode_line(line,c)
             c += 1
-            print(line)
+#            print(line)
             wr.writerow(line)
 
 
@@ -549,8 +549,8 @@ pq_dict = dict()
 rarity_dict = dict()
 race_dict = dict()
 #read_data()
-#read_data_one_hot()
+read_data_one_hot()
 #preprocess_data()
-decode()
+#decode()
 
 
