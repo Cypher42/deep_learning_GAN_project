@@ -88,25 +88,32 @@ Z = tf.placeholder(tf.float32, shape=[None, Z_dim])
 
 
 def sample_Z(m, n):
-    return np.random.uniform(-1., 1., size=[m, n])
+    #return np.random.uniform(-1., 1., size=[m, n])
+    return np.random.normal(size=[m,n])
+
+def lrelu(x, leak=0.2, name="lrelu"):
+     with tf.variable_scope(name):
+         f1 = 0.5 * (1 + leak)
+         f2 = 0.5 * (1 - leak)
+         return f1 * x + f2 * abs(x)
 
 
 def generator(z):
     global sess
-    layer = tf.layers.dense(z, 11, activation = tf.nn.relu)
-    layer = tf.layers.dropout(layer,rate=0.4,training=train)
+    layer = tf.layers.dense(z, 11, activation = lrelu)
+    layer = tf.layers.dropout(layer,rate=0.4,training=True)
     layer = tf.layers.batch_normalization(layer)
-    layer = tf.layers.dense(layer, 33, activation = tf.nn.relu)
-    layer = tf.layers.dropout(layer,rate=0.4,training=train)
+    layer = tf.layers.dense(layer, 33, activation = lrelu)
+    layer = tf.layers.dropout(layer,rate=0.4,training=True)
     layer = tf.layers.batch_normalization(layer)
-    layer = tf.layers.dense(layer, 66, activation = tf.nn.relu)
-    layer = tf.layers.dropout(layer,rate=0.4,training=train)
+    layer = tf.layers.dense(layer, 66, activation = lrelu)
+    layer = tf.layers.dropout(layer,rate=0.4,training=True)
     layer = tf.layers.batch_normalization(layer)
-    layer = tf.layers.dense(layer, 132, activation = tf.nn.relu)
-    layer = tf.layers.dropout(layer,rate=0.4,training=train)
+    layer = tf.layers.dense(layer, 132, activation = lrelu)
+    layer = tf.layers.dropout(layer,rate=0.4,training=True)
     layer = tf.layers.batch_normalization(layer)
     G_prob = tf.layers.dense(layer, 134, activation = tf.nn.sigmoid)
-    #G_h1 = tf.nn.relu(tf.matmul(z, G_W1) + G_b1)
+    #G_h1 = lrelu(tf.matmul(z, G_W1) + G_b1)
     #G_log_prob = tf.matmul(layer, G_W2) + G_b2
     #G_prob = tf.nn.sigmoid(G_log_prob)
     if sess != None:
@@ -119,19 +126,19 @@ def generator(z):
 def discriminator(x):
 
     x = tf.layers.batch_normalization(x)
-    layer = tf.layers.dense(x, 134, activation = tf.nn.relu)
+    layer = tf.layers.dense(x, 134, activation = lrelu)
     layer = tf.layers.dropout(layer,rate=0.4,training=train)
     layer = tf.layers.batch_normalization(layer)
-    layer = tf.layers.dense(layer, 67, activation = tf.nn.relu)
+    layer = tf.layers.dense(layer, 67, activation = lrelu)
     layer = tf.layers.dropout(layer,rate=0.4,training=train)
     layer = tf.layers.batch_normalization(layer)
-    layer = tf.layers.dense(layer, 33, activation = tf.nn.relu)
+    layer = tf.layers.dense(layer, 33, activation = lrelu)
     layer = tf.layers.dropout(layer,rate=0.4,training=train)
     layer = tf.layers.batch_normalization(layer)
-    #layer = tf.layers.dense(layer, 16, activation = tf.nn.relu)
+    #layer = tf.layers.dense(layer, 16, activation = lrelu)
     D_logit = tf.layers.dense(layer, 1, activation = None)
 
-    #D_h1 = tf.nn.relu(tf.matmul(x, D_W1) + D_b1)
+    #D_h1 = lrelu(tf.matmul(x, D_W1) + D_b1)
     #D_logit = tf.matmul(layer, D_W2) + D_b2
     D_prob = tf.nn.sigmoid(D_logit)
 
@@ -166,6 +173,7 @@ i = 0
 d_l = list()
 g_l = list()
 D_loss_curr = 0.0
+G_loss_curr = 0.0
 bar = progressbar.ProgressBar()
 for it in bar(range(1000)):
     train = True
@@ -173,7 +181,8 @@ for it in bar(range(1000)):
     #if it%5==0: improves the discriminator a lot
     #z = sample_Z(mb_size, Z_dim) # using same z for both doesn't change anything
     #if it%10:
-    _, D_loss_curr = sess.run([D_solver, D_loss], feed_dict={X: X_mb, Z: sample_Z(mb_size, Z_dim)})
+    if G_loss_curr <= 1.0:
+        _, D_loss_curr = sess.run([D_solver, D_loss], feed_dict={X: X_mb, Z: sample_Z(mb_size, Z_dim)})
     _, G_loss_curr = sess.run([G_solver, G_loss], feed_dict={Z: sample_Z(mb_size, Z_dim)})
 
     #if it % 10000 == 0:

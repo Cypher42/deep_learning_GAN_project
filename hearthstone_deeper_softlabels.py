@@ -22,7 +22,14 @@ train = False
 leak = 0.2
 #activation_function = tf.nn.relu
 
-activation_function = lambda x: tf.maximum(leak*x, x)
+#activation_function = lambda x: tf.maximum(leak*x, x)
+def lrelu(x, leak=0.2, name="lrelu"):
+     with tf.variable_scope(name):
+         f1 = 0.5 * (1 + leak)
+         f2 = 0.5 * (1 - leak)
+         return f1 * x + f2 * abs(x)
+
+activation_function = lrelu
 
 def preprocess_data(mbatch_size = 128):
     result = list()
@@ -100,7 +107,7 @@ def generator(z):
     #layer = tf.layers.dense(layer, 132, activation = tf.nn.relu)
     #layer = tf.layers.dropout(layer,rate=0.4,training=train)
     #layer = tf.layers.batch_normalization(layer)
-    G_prob = tf.layers.dense(layer, 134, activation = tf.nn.sigmoid)
+    G_prob = tf.layers.dense(layer, 134, activation = tf.nn.tanh)
 
     # if sess != None:
     #     G_prob_arr = G_prob.eval(session=sess)
@@ -146,14 +153,17 @@ D_fake, D_logit_fake = discriminator_temp(G_sample)"""
 # Alternative losses:
 # -------------------
 
-
+"""
 D_loss_real = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(logits=D_logit_real, labels= soft_labels(tf.shape(D_logit_real), True))) #tf.ones_like(D_logit_real)))
 D_loss_fake = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(logits=D_logit_fake, labels= soft_labels(tf.shape(D_logit_fake), False))) #tf.zeros_like(D_logit_fake)))
 D_loss = D_loss_real + D_loss_fake
 G_loss = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(logits=D_logit_fake, labels=soft_labels(tf.shape(D_logit_fake), True)))# tf.ones_like(D_logit_fake)))
+"""
+D_loss = 0.5 * (tf.reduce_mean((D_real - 1)**2) + tf.reduce_mean(D_fake**2))
+G_loss = 0.5 * tf.reduce_mean((D_fake - 1)**2)
 
-D_solver = tf.train.GradientDescentOptimizer(0.05).minimize(D_loss)#, var_list=theta_D)
-G_solver = tf.train.AdamOptimizer(0.01).minimize(G_loss)#, var_list=theta_G)
+D_solver = tf.train.GradientDescentOptimizer(0.001).minimize(D_loss)#, var_list=theta_D)
+G_solver = tf.train.AdamOptimizer(0.001).minimize(G_loss)#, var_list=theta_G)
 
 """
 D_loss_real = tf.log(D_real)
@@ -180,21 +190,23 @@ i = 0
 
 d_l = list()
 g_l = list()
+G_loss_curr = 0.0
 D_loss_curr = 0.0
 bar = progressbar.ProgressBar()
-for it in bar(range(600)):
+for it in bar(range(1000)):
     train = True
     X_mb = preprocess_data_shuffle(mb_size).__next__()
     #if it%5==0: improves the discriminator a lot
     #z = sample_Z(mb_size, Z_dim) # using same z for both doesn't change anything
-
-    _, D_loss_curr = sess.run([D_solver, D_loss], feed_dict={X: X_mb, Z: sample_Z(mb_size, Z_dim)})
-    _, G_loss_curr = sess.run([G_solver, G_loss], feed_dict={Z: sample_Z(mb_size, Z_dim)})
+    if D_loss_curr > 1.0:
+        _, D_loss_curr = sess.run([D_solver, D_loss], feed_dict={X: X_mb, Z: sample_Z(mb_size, Z_dim)})
+    if G_loss_curr > 1.0:
+        _, G_loss_curr = sess.run([G_solver, G_loss], feed_dict={Z: sample_Z(mb_size, Z_dim)})
 
     #if it % 10000 == 0:
      #   print('Iter: {}'.format(it))
-      #  print('D loss: {:.4}'. format(D_loss_curr))
-       # print('G_loss: {:.4}'.format(G_loss_curr))
+    #print('D loss: {:.4}'. format(D_loss_curr))
+    #print('G_loss: {:.4}'.format(G_loss_curr))
         #print()
     #if it%5:
     g_l.append(G_loss_curr)
