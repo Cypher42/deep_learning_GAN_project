@@ -107,7 +107,7 @@ def generator(z):
     #layer = tf.layers.dense(layer, 132, activation = tf.nn.relu)
     #layer = tf.layers.dropout(layer,rate=0.4,training=train)
     #layer = tf.layers.batch_normalization(layer)
-    G_prob = tf.layers.dense(layer, 134, activation = tf.nn.tanh)
+    G_prob = tf.layers.dense(layer, 134, activation = tf.nn.softmax)
 
     # if sess != None:
     #     G_prob_arr = G_prob.eval(session=sess)
@@ -193,30 +193,34 @@ g_l = list()
 G_loss_curr = 0.0
 D_loss_curr = 0.0
 bar = progressbar.ProgressBar()
+gen_t = 0
+dis_t = 0
 for it in bar(range(1000)):
     train = True
-    X_mb = preprocess_data_shuffle(mb_size).__next__()
+    X_mb = preprocess_data_shuffle(256).__next__()
     #if it%5==0: improves the discriminator a lot
     #z = sample_Z(mb_size, Z_dim) # using same z for both doesn't change anything
-    if D_loss_curr > 1.0:
-        _, D_loss_curr = sess.run([D_solver, D_loss], feed_dict={X: X_mb, Z: sample_Z(mb_size, Z_dim)})
-    if G_loss_curr > 1.0:
+    #if it%10
+    _, D_loss_curr = sess.run([D_solver, D_loss], feed_dict={X: X_mb, Z: sample_Z(mb_size, Z_dim)})
+    dis_t += 1
+    if D_loss_curr <= 0.4:
+        gen_t += 1
         _, G_loss_curr = sess.run([G_solver, G_loss], feed_dict={Z: sample_Z(mb_size, Z_dim)})
 
     #if it % 10000 == 0:
      #   print('Iter: {}'.format(it))
-    #print('D loss: {:.4}'. format(D_loss_curr))
-    #print('G_loss: {:.4}'.format(G_loss_curr))
+      #  print('D loss: {:.4}'. format(D_loss_curr))
+       # print('G_loss: {:.4}'.format(G_loss_curr))
         #print()
-    #if it%5:
     g_l.append(G_loss_curr)
     d_l.append(D_loss_curr)
 
 print('Iter: {}'.format(it))
 print('D loss: {:.4}'. format(D_loss_curr))
 print('G_loss: {:.4}'.format(G_loss_curr))
+print('Trained discriminator:',dis_t)
+print("Trained generator:",gen_t)
 print()
-
 
 
 train = False
