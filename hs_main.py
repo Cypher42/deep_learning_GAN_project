@@ -7,7 +7,7 @@ import os
 import csv
 from matplotlib import pyplot as plt
 import progressbar
-from DataProcessorr import decode
+from DataProcessor import decode
 
 def preprocess_data(mbatch_size = 128):
     result = list()

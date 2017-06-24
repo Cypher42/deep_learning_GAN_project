@@ -3,14 +3,14 @@ from tensorflow.examples.tutorials.mnist import input_data
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
-from DataProcessorr import decode
+from DataProcessor import decode
 import os
 import csv
 import progressbar
 
-from DataProcessorr import decode_line_light
+from DataProcessor import decode_line_light
 
-mb_size = 128
+mb_size = 256
 Z_dim = 10
 
 global train
@@ -29,7 +29,12 @@ def lrelu(x, leak=0.2, name="lrelu"):
          f2 = 0.5 * (1 - leak)
          return f1 * x + f2 * abs(x)
 
-activation_function = lrelu
+def selu(x,leak=0.2,name='selu'):
+    alpha = 1.6732632423543772848170429916717
+    scale = 1.0507009873554804934193349852946
+    return scale * tf.where(x >= 0.0, x, alpha * tf.nn.elu(x))
+
+activation_function = selu
 
 def preprocess_data(mbatch_size = 128):
     result = list()
@@ -119,16 +124,21 @@ def generator(z):
 def discriminator(x):
 
     x = tf.layers.batch_normalization(x)
-    #layer = tf.layers.dense(x, 134, activation = tf.nn.relu)
-    #layer = tf.layers.dropout(layer,rate=0.4,training=train)
-    #layer = tf.layers.batch_normalization(layer)
-    layer = tf.layers.dense(x, 256, activation = activation_function)
+    layer = tf.layers.dense(x, 134, activation = tf.nn.relu)
     layer = tf.layers.dropout(layer,rate=0.4,training=train)
     layer = tf.layers.batch_normalization(layer)
-    layer = tf.layers.dense(layer, 128, activation = activation_function)
+    layer = tf.layers.dense(x, 134, activation = activation_function)
     layer = tf.layers.dropout(layer,rate=0.4,training=train)
     layer = tf.layers.batch_normalization(layer)
-    #layer = tf.layers.dense(layer, 16, activation = tf.nn.relu)
+    layer = tf.layers.dense(layer, 67, activation = activation_function)
+    layer = tf.layers.dropout(layer,rate=0.4,training=train)
+    layer = tf.layers.batch_normalization(layer)
+    layer = tf.layers.dense(layer, 33, activation = activation_function)
+    layer = tf.layers.dropout(layer,rate=0.4,training=train)
+    layer = tf.layers.batch_normalization(layer)
+    layer = tf.layers.dense(layer, 16, activation = activation_function)
+    layer = tf.layers.dropout(layer,rate=0.4,training=train)
+    layer = tf.layers.batch_normalization(layer)
     D_logit = tf.layers.dense(layer, 1, activation = None)
 
     #D_h1 = tf.nn.relu(tf.matmul(x, D_W1) + D_b1)
@@ -195,15 +205,15 @@ D_loss_curr = 0.0
 bar = progressbar.ProgressBar()
 gen_t = 0
 dis_t = 0
-for it in bar(range(1000)):
+for it in bar(range(100000)):
     train = True
-    X_mb = preprocess_data_shuffle(256).__next__()
+    X_mb = preprocess_data_shuffle(mb_size).__next__()
     #if it%5==0: improves the discriminator a lot
     #z = sample_Z(mb_size, Z_dim) # using same z for both doesn't change anything
     #if it%10
     _, D_loss_curr = sess.run([D_solver, D_loss], feed_dict={X: X_mb, Z: sample_Z(mb_size, Z_dim)})
     dis_t += 1
-    if D_loss_curr <= 0.4:
+    if D_loss_curr <= 0.15:
         gen_t += 1
         _, G_loss_curr = sess.run([G_solver, G_loss], feed_dict={Z: sample_Z(mb_size, Z_dim)})
 

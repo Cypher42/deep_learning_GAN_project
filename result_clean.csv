@@ -1,15 +1,15 @@
-['gen_card_0'],['WARRIOR'],['WEAPON'],3,2,-5,['EPIC'],"['IMMUNE', 'RITUAL', 'FORGETFUL', 'DISCOVER']","{'REQ_FROZEN_TARGET': -1.0, 'REQ_HERO_TARGET': -1.0}",,0.566134
-['gen_card_1'],['WARRIOR'],['WEAPON'],3,0,-10,['EPIC'],"['AURA', 'INSPIRE', 'SECRET', 'ENRAGED', 'IMMUNE', 'RITUAL', 'FORGETFUL', 'DISCOVER']","{'REQ_STEALTHED_TARGET': -1.0, 'REQ_FROZEN_TARGET': -1.0, 'REQ_MUST_TARGET_TAUNTER': 1.0, 'REQ_TARGET_FOR_COMBO': 1.0, 'REQ_HERO_TARGET': -1.0}",,0.66263
-['gen_card_2'],['HUNTER'],['WEAPON'],-1,0,-7,['EPIC'],"['INSPIRE', 'DISCOVER']",{},,0.509708
-['gen_card_3'],['WARRIOR'],['WEAPON'],2,2,-5,['EPIC'],"['IMMUNE', 'RITUAL', 'DISCOVER']",{'REQ_HERO_TARGET': -1.0},,0.307955
-['gen_card_4'],['HUNTER'],['WEAPON'],-2,3,-7,['RARE'],"['AURA', 'INSPIRE', 'SECRET', 'RITUAL', 'FORGETFUL', 'DISCOVER']",{'REQ_FROZEN_TARGET': -1.0},,0.563957
-['gen_card_5'],['HUNTER'],['WEAPON'],-5,7,-9,['RARE'],"['AURA', 'AI_MUST_PLAY', 'INSPIRE', 'SECRET', 'ADJACENT_BUFF', 'ENRAGED', 'FREEZE', 'IMMUNE', 'FORGETFUL', 'SILENCE', 'DISCOVER']","{'REQ_FROZEN_TARGET': -1.0, 'REQ_TARGET_MIN_ATTACK': -1.0, 'REQ_STEADY_SHOT': -1.0, 'REQ_TARGET_FOR_COMBO': 1.0, 'REQ_HERO_TARGET': -1.0, 'REQ_MUST_TARGET_TAUNTER': 1.0, 'REQ_MINION_TARGET': -1.0}",,0.762865
-['gen_card_6'],['HUNTER'],['WEAPON'],3,0,-6,['EPIC'],[],{},,0.339812
-['gen_card_7'],['WARRIOR'],['SPELL'],0,3,-4,['RARE'],"['AURA', 'FORGETFUL', 'DISCOVER']",{'REQ_FROZEN_TARGET': -1.0},,0.41945
-['gen_card_8'],['DRUID'],['SPELL'],0,1,-4,['EPIC'],[],{},,0.202577
-['gen_card_9'],['DRUID'],['WEAPON'],4,0,-9,['EPIC'],"['AURA', 'INSPIRE', 'IMMUNE', 'RITUAL', 'DISCOVER']","{'REQ_STEALTHED_TARGET': -1.0, 'REQ_FROZEN_TARGET': -1.0, 'REQ_MUST_TARGET_TAUNTER': 1.0, 'REQ_FRIENDLY_TARGET': -1.0}",,0.54979
-['gen_card_10'],['ROGUE'],['WEAPON'],0,1,-4,['EPIC'],"['FORGETFUL', 'DISCOVER']",{'REQ_FROZEN_TARGET': -1.0},,0.463658
-['gen_card_11'],['WARRIOR'],['SPELL'],3,1,-5,['EPIC'],[],{},,0.40478
-['gen_card_12'],['SHAMAN'],['WEAPON'],-2,0,-8,['EPIC'],"['AURA', 'INSPIRE', 'SECRET', 'RITUAL', 'FORGETFUL', 'DISCOVER']",{'REQ_FROZEN_TARGET': -1.0},,0.632084
-['gen_card_13'],['WARRIOR'],['WEAPON'],5,-5,-11,['EPIC'],"['EVIL_GLOW', 'AURA', 'INSPIRE', 'SECRET', 'ENRAGED', 'IMMUNE', 'RITUAL', 'FORGETFUL', 'DISCOVER']","{'REQ_FROZEN_TARGET': -1.0, 'REQ_MINION_SLOT_OR_MANA_CRYSTAL_SLOT': -1.0, 'REQ_TARGET_FOR_COMBO': 1.0, 'REQ_STEADY_SHOT': -1.0, 'REQ_STEALTHED_TARGET': -1.0, 'REQ_ENEMY_TARGET': -1.0, 'REQ_MUST_TARGET_TAUNTER': 1.0, 'REQ_FRIENDLY_TARGET': -1.0, 'REQ_MINION_TARGET': -1.0}",,0.878801
-['gen_card_14'],['WARRIOR'],['SPELL'],-1,0,-6,['EPIC'],"['AURA', 'RITUAL', 'DISCOVER']",{},,0.179802
+['gen_card_0'],['WARRIOR'],['HERO_POWER'],0,0,0,['COMMON'],[],{},['BEAST'],7.70714e-44
+['gen_card_1'],['HUNTER'],['SPELL'],0,0,0,['COMMON'],[],{},['BEAST'],5.39468e-38
+['gen_card_2'],['MAGE'],['SPELL'],0,0,0,['RARE'],[],{},['TOTEM'],8.92854e-18
+['gen_card_3'],['DEATHKNIGHT'],['HERO_POWER'],0,0,0,,[],{},,5.28763e-18
+['gen_card_4'],['MAGE'],['HERO_POWER'],0,0,0,['RARE'],[],{},,1.35968e-24
+['gen_card_5'],['NEUTRAL'],['HERO'],0,0,0,['EPIC'],[],{},,1.08611e-26
+['gen_card_6'],['HUNTER'],['SPELL'],0,0,0,['COMMON'],[],{},['DRAGON'],1.07414e-22
+['gen_card_7'],['DRUID'],['HERO_POWER'],0,0,0,,[],{},,9.48686e-39
+['gen_card_8'],['MAGE'],['WEAPON'],0,0,0,['RARE'],[],{},['TOTEM'],3.85097e-13
+['gen_card_9'],['NEUTRAL'],['ENCHANTMENT'],0,0,0,['COMMON'],[],{},,5.00604e-16
+['gen_card_10'],['ROGUE'],['SPELL'],0,0,0,['RARE'],[],{},['BEAST'],1.65965e-30
+['gen_card_11'],['PRIEST'],['WEAPON'],0,0,0,['COMMON'],[],{},['BEAST'],6.1773e-36
+['gen_card_12'],['WARRIOR'],['SPELL'],0,0,0,['EPIC'],[],{},,1.12318e-28
+['gen_card_13'],['MAGE'],['ENCHANTMENT'],0,0,0,,[],{},,1.4043e-27
+['gen_card_14'],['NEUTRAL'],['HERO'],0,0,0,,[],{},,7.79984e-17

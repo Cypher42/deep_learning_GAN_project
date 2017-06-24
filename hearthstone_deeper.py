@@ -3,12 +3,12 @@ from tensorflow.examples.tutorials.mnist import input_data
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
-from DataProcessorr import decode
+from DataProcessor import decode
 import os
 import csv
 import progressbar
 
-from DataProcessorr import decode_line_light
+from DataProcessor import decode_line_light
 
 mb_size = 128
 Z_dim = 5
