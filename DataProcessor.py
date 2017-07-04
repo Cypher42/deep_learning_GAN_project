@@ -248,6 +248,8 @@ def read_data_one_hot():
             solution += arr.tolist()
             arr = np.zeros(type_iter)
             if data_vec[2] != 1:
+                if data_vec[2] != 'MINION':
+                    skip = True
                 arr[type_dict[data_vec[2]]] = 1.0
                 data_vec[2] = arr
             solution += arr.tolist()

@@ -3,12 +3,12 @@ from tensorflow.examples.tutorials.mnist import input_data
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
-from DataProcessorr import decode
+from DataProcessor import decode
 import os
 import csv
 import progressbar
 
-from DataProcessorr import decode_line_light
+from DataProcessor import decode_line_light
 
 mb_size = 128
 Z_dim = 10
@@ -183,7 +183,7 @@ d_l = list()
 g_l = list()
 D_loss_curr = 0.0
 bar = progressbar.ProgressBar()
-for it in bar(range(600)):
+for it in bar(range(100)):
     train = True
     X_mb = preprocess_data_shuffle(mb_size).__next__()
     #if it%5==0: improves the discriminator a lot
@@ -193,10 +193,10 @@ for it in bar(range(600)):
     _, G_loss_curr = sess.run([G_solver, G_loss], feed_dict={Z: sample_Z(mb_size, Z_dim)})
 
     #if it % 10000 == 0:
-     #   print('Iter: {}'.format(it))
-      #  print('D loss: {:.4}'. format(D_loss_curr))
-       # print('G_loss: {:.4}'.format(G_loss_curr))
-        #print()
+    print('Iter: {}'.format(it))
+    print('D loss: {:.4}'. format(D_loss_curr))
+    print('G_loss: {:.4}'.format(G_loss_curr))
+    print()
     #if it%5:
     g_l.append(G_loss_curr)
     d_l.append(D_loss_curr)
