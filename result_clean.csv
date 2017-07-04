@@ -1,15 +1,15 @@
-['gen_card_0'],['NEUTRAL'],['MINION'],0,0,0,['COMMON'],[],{},['PIRATE'],7.2004e-21
-['gen_card_1'],['PALADIN'],['MINION'],0,0,0,['RARE'],[],{},['BEAST'],1.41252e-14
-['gen_card_2'],['DREAM'],['HERO'],0,0,0,,[],{},['BEAST'],2.55297e-20
-['gen_card_3'],['DRUID'],['WEAPON'],0,0,0,,[],{},,2.18485e-15
-['gen_card_4'],['MAGE'],['HERO_POWER'],0,0,0,['LEGENDARY'],[],{},['DRAGON'],3.24843e-17
-['gen_card_5'],['NEUTRAL'],['HERO'],0,0,0,['LEGENDARY'],[],{},,4.56673e-16
-['gen_card_6'],['HUNTER'],['WEAPON'],0,0,0,['RARE'],[],{},,1.63083e-16
-['gen_card_7'],['WARLOCK'],['WEAPON'],0,0,0,,[],{},['PIRATE'],1.46036e-15
-['gen_card_8'],['ROGUE'],['WEAPON'],0,0,0,,[],{},,1.01197e-14
-['gen_card_9'],['PRIEST'],['WEAPON'],0,0,0,['LEGENDARY'],[],{},,2.22508e-14
-['gen_card_10'],['WARLOCK'],['HERO'],0,0,0,['EPIC'],[],{},,2.87748e-16
-['gen_card_11'],['HUNTER'],['ENCHANTMENT'],0,0,0,['LEGENDARY'],[],{},['PIRATE'],1.9418e-15
-['gen_card_12'],['WARRIOR'],['HERO'],0,0,0,,[],{},,7.47899e-09
-['gen_card_13'],['DRUID'],['WEAPON'],0,0,0,,[],{},['DRAGON'],9.11713e-16
-['gen_card_14'],['ROGUE'],['SPELL'],0,0,0,['EPIC'],[],{},,7.93832e-22
+['gen_card_0'],['DRUID'],['ENCHANTMENT'],9,12,12,['EPIC'],"['BATTLECRY', 'DEATHRATTLE', 'JADE_GOLEM', 'DIVINE_SHIELD', 'CHARGE', 'InvisibleDeathrattle', 'CANT_ATTACK', 'POISONOUS']",{},['MECHANICAL'],0.999995
+['gen_card_1'],['NEUTRAL'],['HERO'],9,12,12,['LEGENDARY'],"['BATTLECRY', 'DEATHRATTLE', 'JADE_GOLEM', 'DIVINE_SHIELD', 'CHARGE', 'InvisibleDeathrattle', 'CANT_ATTACK', 'POISONOUS']",{},,0.999998
+['gen_card_2'],['DREAM'],['HERO_POWER'],9,12,12,['RARE'],"['BATTLECRY', 'DEATHRATTLE', 'JADE_GOLEM', 'DIVINE_SHIELD', 'CHARGE', 'InvisibleDeathrattle', 'CANT_ATTACK', 'POISONOUS']",{},,0.999986
+['gen_card_3'],['DEATHKNIGHT'],['ENCHANTMENT'],9,12,12,['EPIC'],"['BATTLECRY', 'DEATHRATTLE', 'JADE_GOLEM', 'DIVINE_SHIELD', 'CHARGE', 'InvisibleDeathrattle', 'CANT_ATTACK', 'POISONOUS']",{},['BEAST'],0.999993
+['gen_card_4'],['DEATHKNIGHT'],['ENCHANTMENT'],10,12,12,['EPIC'],"['BATTLECRY', 'DEATHRATTLE', 'JADE_GOLEM', 'DIVINE_SHIELD', 'CHARGE', 'InvisibleDeathrattle', 'CANT_ATTACK', 'POISONOUS']",{},,1.0
+['gen_card_5'],['NEUTRAL'],['ENCHANTMENT'],9,12,12,['EPIC'],"['BATTLECRY', 'DEATHRATTLE', 'JADE_GOLEM', 'DIVINE_SHIELD', 'CHARGE', 'InvisibleDeathrattle', 'CANT_ATTACK', 'POISONOUS']",{},,0.999994
+['gen_card_6'],['DRUID'],['ENCHANTMENT'],9,12,12,['EPIC'],"['BATTLECRY', 'DEATHRATTLE', 'JADE_GOLEM', 'DIVINE_SHIELD', 'CHARGE', 'InvisibleDeathrattle', 'CANT_ATTACK', 'POISONOUS']",{},['BEAST'],0.999995
+['gen_card_7'],['PALADIN'],['ENCHANTMENT'],9,12,12,['RARE'],"['BATTLECRY', 'DEATHRATTLE', 'JADE_GOLEM', 'DIVINE_SHIELD', 'CHARGE', 'InvisibleDeathrattle', 'CANT_ATTACK', 'POISONOUS']",{},['MECHANICAL'],0.999997
+['gen_card_8'],['PALADIN'],['HERO'],9,11,12,['RARE'],"['BATTLECRY', 'DEATHRATTLE', 'JADE_GOLEM', 'DIVINE_SHIELD', 'CHARGE', 'InvisibleDeathrattle', 'CANT_ATTACK', 'POISONOUS']",{},,0.999973
+['gen_card_9'],['DREAM'],['ENCHANTMENT'],9,12,12,['EPIC'],"['BATTLECRY', 'DEATHRATTLE', 'JADE_GOLEM', 'DIVINE_SHIELD', 'CHARGE', 'InvisibleDeathrattle', 'CANT_ATTACK', 'POISONOUS']",{},['BEAST'],0.99999
+['gen_card_10'],['DEATHKNIGHT'],['HERO_POWER'],9,12,12,['RARE'],"['BATTLECRY', 'DEATHRATTLE', 'JADE_GOLEM', 'DIVINE_SHIELD', 'CHARGE', 'InvisibleDeathrattle', 'CANT_ATTACK', 'POISONOUS']",{},,0.999987
+['gen_card_11'],['DEATHKNIGHT'],['ENCHANTMENT'],9,12,12,['EPIC'],"['BATTLECRY', 'DEATHRATTLE', 'JADE_GOLEM', 'DIVINE_SHIELD', 'CHARGE', 'InvisibleDeathrattle', 'CANT_ATTACK', 'POISONOUS']",{},,0.999999
+['gen_card_12'],['DRUID'],['ENCHANTMENT'],9,12,12,['EPIC'],"['BATTLECRY', 'DEATHRATTLE', 'JADE_GOLEM', 'DIVINE_SHIELD', 'CHARGE', 'InvisibleDeathrattle', 'CANT_ATTACK', 'POISONOUS']",{},['MECHANICAL'],0.999995
+['gen_card_13'],['NEUTRAL'],['ENCHANTMENT'],9,12,12,['EPIC'],"['BATTLECRY', 'DEATHRATTLE', 'JADE_GOLEM', 'DIVINE_SHIELD', 'CHARGE', 'InvisibleDeathrattle', 'CANT_ATTACK', 'POISONOUS']",{},['MECHANICAL'],0.999997
+['gen_card_14'],['WARRIOR'],['HERO'],9,12,12,['RARE'],"['BATTLECRY', 'DEATHRATTLE', 'JADE_GOLEM', 'DIVINE_SHIELD', 'CHARGE', 'InvisibleDeathrattle', 'CANT_ATTACK', 'POISONOUS']",{},,0.999998

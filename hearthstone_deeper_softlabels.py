@@ -206,7 +206,7 @@ gr = list()
 D_loss_curr = 0.0
 G_loss_curr= 0.0
 bar = progressbar.ProgressBar()
-for it in bar(range(200)):
+for it in bar(range(2000)):
     train = True
     X_mb = preprocess_data_shuffle(mb_size).__next__()
     #if it%5==0: #improves the discriminator a lot
