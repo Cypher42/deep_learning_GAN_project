@@ -3,13 +3,13 @@ from tensorflow.examples.tutorials.mnist import input_data
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
-from DataProcessorr import decode
+from DataProcessor import decode
 import os
 import csv
 import progressbar
 from tensorflow.contrib.framework import get_variables
 
-from DataProcessorr import decode_line_light
+from DataProcessor import decode_line_light
 
 sess = tf.InteractiveSession()
 
@@ -18,7 +18,7 @@ Possibility to use a pretrained model
 If RESTORE= None: Das Model is trained for EPOCHS steps
 If RESTORE = someFilename: Samples are generated with the saved variables loaded from the specified file
 """
-RESTORE="./model-199"
+RESTORE=None#"./model-1990"
 EPOCHS = 2000
 
 # PARAMETERS:
@@ -234,7 +234,7 @@ D_loss_curr = 0.0
 G_loss_curr= 0.0
 # Display ProgressBar
 bar = progressbar.ProgressBar()
-
+EPOCHS = 2000
 for it in bar(range(EPOCHS)):
     train = True
     X_mb = preprocess_data_shuffle(mb_size).__next__()
@@ -261,7 +261,7 @@ for it in bar(range(EPOCHS)):
         #print()
 
     if it%199==0 and it!=0:
-        saver.save(sess, "model", global_step = it)
+        saver.save(sess, ".\\model", global_step = it)
 
 
 # Show progressbar and prind losses in the end
