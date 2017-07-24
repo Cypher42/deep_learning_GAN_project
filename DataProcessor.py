@@ -309,8 +309,7 @@ def read_data_one_hot():
                 # print(len(data_vec))
             data_vec = list()
             solution = list()
-
-
+        print(c)
 
 def preprocess_data(mbatch_size = 128):
     result = list()
