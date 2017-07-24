@@ -18,7 +18,7 @@ Possibility to use a pretrained model
 If RESTORE= None: Das Model is trained for EPOCHS steps
 If RESTORE = someFilename: Samples are generated with the saved variables loaded from the specified file
 """
-RESTORE=None#"./model-1990"
+RESTORE="./model-1990"
 EPOCHS = 2000
 
 # PARAMETERS:
@@ -234,7 +234,7 @@ D_loss_curr = 0.0
 G_loss_curr= 0.0
 # Display ProgressBar
 bar = progressbar.ProgressBar()
-EPOCHS = 2000
+#EPOCHS = 2000
 for it in bar(range(EPOCHS)):
     train = True
     X_mb = preprocess_data_shuffle(mb_size).__next__()
